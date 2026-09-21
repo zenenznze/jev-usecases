@@ -160,13 +160,17 @@ def run_guarded_security_answer(
         GuardrailInput(surface=GuardSurface.PROMPT, content=request.question, policy=request.policy),
         thresholds=thresholds,
     )
-    if inbound.decision == "block":
+    if inbound.decision != "allow":
+        blocked = inbound.decision == "block"
         return UseCaseResult(
             use_case="security_guarded_assistant",
-            decision="blocked_prompt",
-            action_band=ActionBand.BLOCK.value,
-            rationale=f"Jev blocked the prompt before the LLM was called. {inbound.rationale}",
-            actions=["deny", "log:blocked_prompt"],
+            decision="blocked_prompt" if blocked else "prompt_needs_review",
+            action_band=ActionBand.BLOCK.value if blocked else ActionBand.CONFIRM.value,
+            rationale=(
+                f"Jev {'blocked' if blocked else 'held'} the prompt before the LLM was called. "
+                f"{inbound.rationale}"
+            ),
+            actions=["deny", "log:blocked_prompt"] if blocked else ["hold_for_human", "log:guardrail_review"],
             raw_answers={"inbound": inbound.raw_answers},
             metadata={"llm_called": False, "answer": None},
             model=inbound.model,

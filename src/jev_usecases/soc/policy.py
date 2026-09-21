@@ -183,7 +183,7 @@ def recovery_decision(
         raise ValueError("hours_contained must be >= 0")
     safe = noul(answers, "safe_to_restore")
     residual = score(answers, "residual_risk")
-    _picked, confidence = choice_of(answers, "restore_choice")
+    picked, confidence = choice_of(answers, "restore_choice")
 
     must_wait = (not monitoring_clean) or (
         triage_decision == "contain_now" and hours_contained < 4
@@ -202,12 +202,19 @@ def recovery_decision(
             ["keep:isolation"],
             f"safe={safe:.2f}; residual={residual:.2f}",
         )
-    if confidence < thr.high_stakes_confidence:
+    if picked not in {"limited_restore", "full_restore"}:
+        return (
+            "remain_isolated",
+            ActionBand.HUMAN.value if picked == "human_review" else ActionBand.CONFIRM.value,
+            ["keep:isolation"],
+            f"choice={picked}; confidence={confidence:.2f}",
+        )
+    if picked == "limited_restore" or confidence < thr.high_stakes_confidence:
         return (
             "limited_restore",
             ActionBand.CONFIRM.value,
             ["restore:limited", "collect:monitoring"],
-            f"confidence={confidence:.2f}",
+            f"choice={picked}; confidence={confidence:.2f}",
         )
     return (
         "full_restore",
@@ -228,7 +235,7 @@ def closeout_decision(
     thr = thresholds or Thresholds()
     notes = noul(answers, "notes_complete")
     recurrence = score(answers, "recurrence_risk")
-    _picked, confidence = choice_of(answers, "close_choice")
+    picked, confidence = choice_of(answers, "close_choice")
     contained = triage_decision == "contain_now"
     restored = recovery_decision_name in {"limited_restore", "full_restore"}
 
@@ -252,6 +259,13 @@ def closeout_decision(
             ActionBand.HUMAN.value,
             ["monitor:open_case"],
             f"confidence={confidence:.2f}",
+        )
+    if picked != "close":
+        return (
+            "monitor",
+            ActionBand.CONFIRM.value,
+            ["monitor:open_case"],
+            f"choice={picked}; confidence={confidence:.2f}",
         )
     return (
         "close",
