@@ -95,7 +95,8 @@ def gate_tool_call(gate: ToolCallGate, *, thresholds: Thresholds | None = None) 
     ]
     scores = {k: a[k]["noul"] for k in safety_keys}
     clear_violation = any(v <= (1 - thr.high_stakes_noul) for v in scores.values())
-    unclear = any(thr.noul_no < v < thr.noul_yes for v in scores.values())
+    # Every safety condition must reach the affirmative floor before auto-allow.
+    unclear = any(v < thr.noul_yes for v in scores.values())
     risk = a["risk_class"]["choice"]
 
     if clear_violation or risk == "irreversible" and scores["no_irreversible_damage"] < thr.high_stakes_noul:
