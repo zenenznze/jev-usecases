@@ -143,7 +143,7 @@ The SOC runners are the initial implementation of an agentic security operations
 
 ## Run the initial set
 
-Python 3.10 or newer. Copy `.env.example` to `.env` and set `TYPESAFE_API_KEY`. Do not commit `.env`.
+Python 3.10 or newer. Set `TYPESAFE_API_KEY` as a Windows User-level environment variable; the official SDK reads it directly from the process environment. Do not put the key in project files.
 
 ```bash
 python -m venv .venv

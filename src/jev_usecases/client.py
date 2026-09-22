@@ -2,37 +2,19 @@
 
 from __future__ import annotations
 
-import os
 from functools import lru_cache
-from pathlib import Path
 
-from dotenv import load_dotenv
 from typesafe_sdk import TypeSafeClient
-
-# Load .env from repo root when present (local/dev). Production should inject env vars.
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-load_dotenv(_REPO_ROOT / ".env")
-load_dotenv()  # also allow CWD override
-
-
-class MissingApiKeyError(RuntimeError):
-    """Raised when TYPESAFE_API_KEY is not configured."""
 
 
 @lru_cache(maxsize=1)
 def get_client(model: str | None = None) -> TypeSafeClient:
     """Return a cached TypeSafe client.
 
-    Reads ``TYPESAFE_API_KEY`` from the environment (or ``.env``).
-    Optional ``TYPESAFE_MODEL`` / ``model`` selects the System One model.
+    The official SDK reads ``TYPESAFE_API_KEY`` from the process environment.
+    An explicit ``model`` overrides the SDK default when supplied.
     """
-    api_key = os.getenv("TYPESAFE_API_KEY", "").strip()
-    if not api_key:
-        raise MissingApiKeyError(
-            "TYPESAFE_API_KEY is not set. Copy .env.example to .env and add your key."
-        )
-    resolved_model = model or os.getenv("TYPESAFE_MODEL", "jev-latest")
-    return TypeSafeClient(api_key=api_key, model=resolved_model)
+    return TypeSafeClient(model=model)
 
 
 def answers_to_dict(response) -> dict:

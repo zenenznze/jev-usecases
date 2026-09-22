@@ -33,3 +33,7 @@ Thumbs.db
 .tmp/
 output/
 *.sqlite
+
+# Agent-managed discovery links
+.agents/skills/
+.claude/skills/

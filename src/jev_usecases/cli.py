@@ -10,7 +10,6 @@ from rich.console import Console
 from rich.json import JSON
 from rich.table import Table
 
-from jev_usecases.client import MissingApiKeyError
 from jev_usecases.registry import USE_CASES, run_use_case
 
 console = Console()
@@ -38,9 +37,6 @@ def run_cmd(name: str, json_out: bool) -> None:
     """Run one use case against the live TypeSafe API using its fixture."""
     try:
         result = run_use_case(name)
-    except MissingApiKeyError as exc:
-        console.print(f"[red]{exc}[/red]")
-        sys.exit(2)
     except Exception as exc:  # noqa: BLE001 — surface API/validation errors to CLI users
         console.print(f"[red]{type(exc).__name__}: {exc}[/red]")
         sys.exit(1)

@@ -7,12 +7,6 @@ from dataclasses import dataclass
 
 import httpx
 
-from jev_usecases.client import _REPO_ROOT  # noqa: PLC2701 — shared dotenv root
-from dotenv import load_dotenv
-
-load_dotenv(_REPO_ROOT / ".env")
-load_dotenv()
-
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-5"
