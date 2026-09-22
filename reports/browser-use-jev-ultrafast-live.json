@@ -1,0 +1,43 @@
+{
+  "credential_source": "fresh Windows User-level read per child process; values omitted",
+  "user_scope_presence": {
+    "TYPESAFE_API_KEY": "present",
+    "TEXT_MODEL_API_KEY": "missing"
+  },
+  "systemone_smoke": {
+    "status": "returned",
+    "model_requested": "jev-latest",
+    "model_returned": "jev-1.13.0",
+    "answer_type": "NoulAnswer",
+    "answer_name": "is_sales_request",
+    "noul": 0.91,
+    "evidence_file": ".tmp/typesafe-systemone-smoke.json"
+  },
+  "jev_only_crm": {
+    "status": "passed",
+    "text_api_calls": 0,
+    "type_safe_decisions": 5,
+    "actions": [
+      "CLICK search",
+      "CLICK open Zhang lead",
+      "SELECT high-intent lead stage",
+      "CLICK save stage",
+      "DONE"
+    ],
+    "readback": {
+      "selectedLeadId": "lead-zhang",
+      "lead_name": "张先生",
+      "stage": "高意向",
+      "notes": [],
+      "followups": []
+    },
+    "evidence_file": ".tmp/jev-only-latest.json"
+  },
+  "full_crm_live": {
+    "status": "blocked_by_official_text_requirement",
+    "exit_code": 1,
+    "error": "RuntimeError: Live CRM mode is blocked; missing environment entries: TEXT_MODEL_API_KEY",
+    "evidence_file": ".tmp/crm-live-latest.txt"
+  },
+  "key_policy": "No credential value was printed or persisted; no global credential was changed."
+}

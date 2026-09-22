@@ -20,6 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_DIR = Path(__file__).resolve().parent
+EVIDENCE = ROOT / ".tmp" / "jev-only-latest.json"
 GOAL = "找到张先生，把线索阶段改为高意向并保存阶段，完成后停止。"
 QUERY = "张先生"
 
@@ -111,7 +112,10 @@ def run(jev_root: Path) -> dict:
 def main() -> None:
     jev_root = ROOT / ".tmp" / "jev-ultrafast"
     result = run(jev_root.resolve())
-    sys.stdout.buffer.write((json.dumps(result, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    payload = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
+    EVIDENCE.write_text(payload, encoding="utf-8")
+    sys.stdout.buffer.write(payload.encode("utf-8"))
 
 
 if __name__ == "__main__":
