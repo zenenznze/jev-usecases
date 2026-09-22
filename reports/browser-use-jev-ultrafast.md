@@ -20,12 +20,7 @@
 - `uv run jev`：服务正常启动；访问 `http://127.0.0.1:8766/` 返回 HTTP 200，页面标题和 `Start demo` 内容存在。
 - Browser Harness 本地能力：Chrome、daemon、active browser connection 均为 OK；Browser Use Cloud auth 为可选项，未配置。
 
-**未宣称完整 live Demo 成功。** 当前环境缺少：
-
-- `TYPESAFE_API_KEY`
-- `TEXT_MODEL_API_KEY`
-
-因此没有调用付费模型，也没有伪造 Jev 决策或原始 Google Flights Demo 成功。
+**未宣称完整 live Demo 成功。** 首次验证时环境同时缺少 `TYPESAFE_API_KEY` 和 `TEXT_MODEL_API_KEY`，因此没有伪造 Jev 决策或原始 Google Flights Demo 成功。
 
 ## 假 4S CRM E2E
 
@@ -67,9 +62,24 @@ uv run --project .tmp/jev-ultrafast python experiments/browser-use-jev-ultrafast
 - 主仓库 `pytest`（通过隔离验证环境提供依赖）：`96 passed, 38 skipped`；跳过项为 live/API 相关测试。
 - `git diff --check`：通过。
 
+## 最新 live 重试证据
+
+用户配置 User-level 环境变量后，安全检查结果为：
+
+- `TYPESAFE_API_KEY=present`
+- `TEXT_MODEL_API_KEY=missing`
+
+已通过 `ProcessStartInfo` 仅为 `uv` 子进程注入 User-level 的 `TYPESAFE_API_KEY`，未打印值、未写入项目文件，也未修改当前 Agent 进程环境。执行 `--live` 的真实结果为退出码 1：
+
+```text
+RuntimeError: Live CRM mode is blocked; missing environment entries: TEXT_MODEL_API_KEY
+```
+
+该剩余阻塞是官方必需条件，不是可用 stub 替代的可选项：上游 README 的 Try it 示例要求同时配置两个变量；上游 `jev_ultrafast/model.py::field_text()` 在缺少 `TEXT_MODEL_API_KEY` 时直接抛出 `TYPE_TEXT needs TEXT_MODEL_API_KEY`，并且不会输入猜测文本。
+
 ## 阻塞与下一条命令
 
-live CRM 的下一步不是猜测成功，而是在全局环境补齐上述两项凭据后执行：
+live CRM 的下一步不是猜测成功，而是在全局环境补齐唯一剩余的 `TEXT_MODEL_API_KEY` 后执行：
 
 ```bash
 cd C:/Users/joe/projects/jev-use
