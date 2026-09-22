@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>远航汽车 · 4S 销售 CRM</title>
+    <style>
+      :root { font-family: system-ui, sans-serif; color: #17202a; background: #f4f6f8; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      header { background: #15324b; color: white; padding: 18px 28px; }
+      main { max-width: 960px; margin: 28px auto; padding: 0 20px; }
+      section { background: white; border: 1px solid #dbe2e8; border-radius: 10px; padding: 22px; margin-bottom: 18px; }
+      h1, h2, h3 { margin: 0 0 14px; }
+      h1 { font-size: 22px; }
+      h2 { font-size: 18px; }
+      h3 { font-size: 15px; }
+      p { color: #53616d; }
+      form, .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+      label { display: grid; gap: 6px; color: #53616d; font-size: 13px; }
+      input, textarea, select, button { font: inherit; border: 1px solid #c6d0d8; border-radius: 6px; padding: 9px 11px; }
+      input, textarea, select { background: white; min-width: 170px; }
+      textarea { min-width: 360px; min-height: 74px; }
+      button { background: #1976a8; color: white; border-color: #1976a8; cursor: pointer; }
+      button.secondary { background: white; color: #1976a8; }
+      button:hover { filter: brightness(.94); }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e8edf0; }
+      th { color: #53616d; font-size: 13px; }
+      .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #e8f3f8; color: #166188; font-size: 12px; }
+      .muted { color: #7a8791; font-size: 13px; }
+      .success { background: #eef8ee; border: 1px solid #b9dfb9; color: #256b25; padding: 10px 12px; border-radius: 6px; }
+      .error { background: #fff3f0; border: 1px solid #e8b6ab; color: #8a2d20; padding: 10px 12px; border-radius: 6px; }
+      ul { margin: 8px 0 0; padding-left: 20px; }
+      .toolbar { display: flex; justify-content: space-between; gap: 16px; align-items: end; flex-wrap: wrap; }
+    </style>
+  </head>
+  <body>
+    <header><strong>远航汽车 · 4S 销售 CRM</strong></header>
+    <main id="app"></main>
+    <script>
+      const app = document.getElementById("app");
+      const crm = {
+        search: "",
+        selectedLeadId: null,
+        leads: [
+          { id: "lead-zhang", name: "张先生", phone: "138****0001", model: "远航 X5", stage: "新线索", notes: [], followups: [] },
+          { id: "lead-li", name: "李女士", phone: "139****0002", model: "远航 S7", stage: "已联系", notes: [], followups: [] },
+        ],
+      };
+      window.crmState = crm;
+      const selectedLead = () => crm.leads.find((lead) => lead.id === crm.selectedLeadId);
+      const escapeHtml = (value) => String(value).replace(/[&<>\"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\\\"": "&quot;" }[char] || char));
+      const renderList = () => {
+        const query = crm.search.trim();
+        const rows = crm.leads.filter((lead) => !query || lead.name.includes(query) || lead.phone.includes(query));
+        app.innerHTML = `
+          <section>
+            <div class="toolbar">
+              <div><h1>线索管理</h1><p>搜索并维护销售线索、备注和跟进计划。</p></div>
+              <span class="badge">离线测试 CRM</span>
+            </div>
+            <form id="search-form">
+              <label>线索搜索<input type="search" id="lead-search" aria-label="线索搜索" placeholder="输入客户姓名或手机号" value="${escapeHtml(crm.search)}"></label>
+              <button type="submit">搜索</button>
+            </form>
+          </section>
+          <section>
+            <h2>搜索结果</h2>
+            ${rows.length ? `<table><thead><tr><th>客户</th><th>车型</th><th>阶段</th><th>操作</th></tr></thead><tbody>${rows.map((lead) => `
+              <tr><td>${escapeHtml(lead.name)}</td><td>${escapeHtml(lead.model)}</td><td>${escapeHtml(lead.stage)}</td><td><button class="secondary" data-open="${lead.id}">查看${escapeHtml(lead.name)}</button></td></tr>
+            `).join("")}</tbody></table>` : `<p class="muted">没有匹配的线索。</p>`}
+          </section>
+        `;
+        document.getElementById("search-form").onsubmit = (event) => {
+          event.preventDefault();
+          crm.search = document.getElementById("lead-search").value;
+          renderList();
+        };
+        document.querySelectorAll("[data-open]").forEach((button) => {
+          button.onclick = () => { crm.selectedLeadId = button.dataset.open; renderDetail(); };
+        });
+      };
+      const renderDetail = () => {
+        const lead = selectedLead();
+        if (!lead) return renderList();
+        app.innerHTML = `
+          <section>
+            <div class="toolbar"><div><h1>客户详情 · ${escapeHtml(lead.name)}</h1><p>车型：${escapeHtml(lead.model)} · 电话：${escapeHtml(lead.phone)}</p></div><button id="back" class="secondary">返回线索列表</button></div>
+          </section>
+          <section>
+            <h2>线索阶段</h2>
+            <p class="muted">当前阶段：${escapeHtml(lead.stage)}</p>
+            <div class="row"><label>线索阶段<select id="stage" aria-label="线索阶段">
+              <option value="new" ${lead.stage === "新线索" ? "selected" : ""}>新线索</option>
+              <option value="contacted" ${lead.stage === "已联系" ? "selected" : ""}>已联系</option>
+              <option value="high" ${lead.stage === "高意向" ? "selected" : ""}>高意向</option>
+              <option value="won" ${lead.stage === "已成交" ? "selected" : ""}>已成交</option>
+            </select></label><button id="save-stage">保存阶段</button></div>
+          </section>
+          <section>
+            <h2>客户备注</h2>
+            <form id="note-form"><label>备注内容<textarea id="note" aria-label="备注内容" placeholder="填写客户需求和沟通情况"></textarea></label><button type="submit">添加备注</button></form>
+            <ul id="notes">${lead.notes.length ? lead.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("") : '<li class="muted">暂无备注</li>'}</ul>
+          </section>
+          <section>
+            <h2>创建跟进</h2>
+            <form id="followup-form">
+              <label>跟进类型<select id="followup-type" aria-label="跟进类型"><option value="">请选择类型</option><option value="试驾">试驾</option><option value="电话回访">电话回访</option></select></label>
+              <label>跟进日期<select id="followup-day" aria-label="跟进日期"><option value="">请选择日期</option><option value="周六">周六</option><option value="周日">周日</option></select></label>
+              <label>跟进时间<select id="followup-time" aria-label="跟进时间"><option value="">请选择时间</option><option value="15:00">15:00</option><option value="16:00">16:00</option></select></label>
+              <button type="submit">创建跟进</button>
+            </form>
+            <ul id="followups">${lead.followups.length ? lead.followups.map((item) => `<li>${escapeHtml(item.day)} ${escapeHtml(item.time)} · ${escapeHtml(item.type)}</li>`).join("") : '<li class="muted">暂无跟进</li>'}</ul>
+          </section>
+          ${lead.stage === "高意向" && lead.notes.some((note) => note.includes("询价") && note.includes("周六试驾")) && lead.followups.some((item) => item.day === "周六" && item.time === "15:00" && item.type === "试驾") ? '<div class="success" id="crm-success">已完成张先生的高意向、询价/周六试驾备注和周六 15:00 试驾跟进。</div>' : ''}
+        `;
+        document.getElementById("back").onclick = renderList;
+        document.getElementById("save-stage").onclick = () => {
+          const values = { new: "新线索", contacted: "已联系", high: "高意向", won: "已成交" };
+          lead.stage = values[document.getElementById("stage").value];
+          renderDetail();
+        };
+        document.getElementById("note-form").onsubmit = (event) => {
+          event.preventDefault();
+          const value = document.getElementById("note").value.trim();
+          if (value) lead.notes.push(value);
+          renderDetail();
+        };
+        document.getElementById("followup-form").onsubmit = (event) => {
+          event.preventDefault();
+          const type = document.getElementById("followup-type").value;
+          const day = document.getElementById("followup-day").value;
+          const time = document.getElementById("followup-time").value;
+          if (type && day && time) lead.followups.push({ type, day, time });
+          renderDetail();
+        };
+      };
+      window.crmReadback = () => JSON.parse(JSON.stringify({ selectedLeadId: crm.selectedLeadId, leads: crm.leads }));
+      renderList();
+    </script>
+  </body>
+</html>
