@@ -1,0 +1,128 @@
+{
+  "cases": [
+    {
+      "id": "high_intent_i3",
+      "title": "高意向：i3 / 预算 / 置换 / 月供 / 周六到店但未确认",
+      "category": "高意向",
+      "message": "客户：我在看宝马 i3，也在比较 Model 3。预算大概 25 万，旧车想置换，首付 20% 分 36 期月供大概多少？周六下午如果方便我可以到店看看，价格合适近期就定。",
+      "facts": {
+        "vehicle": "宝马 i3",
+        "competitors": ["Tesla Model 3"],
+        "budget": "约 25 万（客户口述）",
+        "trade_in": "有旧车置换意向",
+        "finance": "首付 20%，36 期；月供未知",
+        "visit_window": "周六下午；客户说可以到店，但尚未明确确认",
+        "appointment_confirmed": false,
+        "do_not_contact": false
+      },
+      "unknowns": ["真实成交价", "金融审批与准确月供", "置换评估价", "库存", "周六具体时段", "客户是否最终确认预约"],
+      "gold": {"lead_stage": "ready", "high_value_lead": true, "risk_to_human": true, "wrong_progression": "不得写成已预约"},
+      "replay_answers": {
+        "intent": {"choice": "purchase", "confidence": 0.92, "probabilities": {"purchase": 0.92, "price_inquiry": 0.05, "comparison": 0.03, "financing": 0.0, "test_drive": 0.0, "other": 0.0}},
+        "lead_stage": {"choice": "ready", "confidence": 0.90, "probabilities": {"ready": 0.90, "evaluation": 0.08, "consideration": 0.02, "awareness": 0.0}},
+        "objection": {"choice": "price", "confidence": 0.43, "probabilities": {"price": 0.55, "competition": 0.25, "none": 0.20, "financing": 0.0, "product": 0.0}},
+        "next_action": {"choice": "book_test_drive", "confidence": 0.68, "probabilities": {"book_test_drive": 0.76, "quote": 0.14, "human_followup": 0.08, "compare": 0.01, "finance_plan": 0.01, "block_outreach": 0.0}},
+        "high_value_lead": {"noul": 0.93},
+        "human_needed": {"noul": 0.91},
+        "do_not_contact": {"noul": 0.01},
+        "appointment_confirmed": {"noul": 0.18}
+      }
+    },
+    {
+      "id": "ordinary_inquiry",
+      "title": "普通咨询：只问车型与大致价格",
+      "category": "普通咨询",
+      "message": "客户：想了解一下你们家的新能源车型，大概什么价位？我还没决定什么时候买。",
+      "facts": {"vehicle": "未明确", "competitors": [], "budget": "未知", "trade_in": "未知", "finance": "未知", "visit_window": "未知", "appointment_confirmed": false, "do_not_contact": false},
+      "unknowns": ["车型", "预算", "购买时间", "是否愿意到店"],
+      "gold": {"lead_stage": "awareness", "high_value_lead": false, "risk_to_human": true, "wrong_progression": "不得自动预约"},
+      "replay_answers": {
+        "intent": {"choice": "price_inquiry", "confidence": 0.82, "probabilities": {"price_inquiry": 0.82, "purchase": 0.08, "comparison": 0.05, "financing": 0.03, "test_drive": 0.0, "other": 0.02}},
+        "lead_stage": {"choice": "awareness", "confidence": 0.78, "probabilities": {"awareness": 0.78, "consideration": 0.15, "evaluation": 0.05, "ready": 0.02}},
+        "objection": {"choice": "none", "confidence": 0.61, "probabilities": {"none": 0.61, "price": 0.25, "competition": 0.08, "financing": 0.06, "product": 0.0}},
+        "next_action": {"choice": "quote", "confidence": 0.67, "probabilities": {"quote": 0.67, "human_followup": 0.16, "compare": 0.08, "finance_plan": 0.04, "book_test_drive": 0.03, "block_outreach": 0.02}},
+        "high_value_lead": {"noul": 0.28}, "human_needed": {"noul": 0.52}, "do_not_contact": {"noul": 0.01}, "appointment_confirmed": {"noul": 0.01}
+      }
+    },
+    {
+      "id": "competitor_comparison",
+      "title": "竞品：明确比较 Model 3 与 i3",
+      "category": "竞品",
+      "message": "客户：Model 3 和宝马 i3 怎么选？我更在意续航、空间和保养成本，先把差异发我看看。",
+      "facts": {"vehicle": "宝马 i3", "competitors": ["Tesla Model 3"], "budget": "未知", "trade_in": "未知", "finance": "未知", "visit_window": "未知", "appointment_confirmed": false, "do_not_contact": false},
+      "unknowns": ["最终预算", "购车时间", "是否接受试驾", "真实使用里程"],
+      "gold": {"lead_stage": "consideration", "high_value_lead": false, "risk_to_human": true, "wrong_progression": "不得把比较请求写成成交意向"},
+      "replay_answers": {
+        "intent": {"choice": "comparison", "confidence": 0.91, "probabilities": {"comparison": 0.91, "price_inquiry": 0.05, "purchase": 0.02, "financing": 0.01, "test_drive": 0.0, "other": 0.01}},
+        "lead_stage": {"choice": "consideration", "confidence": 0.86, "probabilities": {"consideration": 0.86, "evaluation": 0.10, "awareness": 0.04, "ready": 0.0}},
+        "objection": {"choice": "competition", "confidence": 0.78, "probabilities": {"competition": 0.78, "product": 0.12, "price": 0.06, "none": 0.04, "financing": 0.0}},
+        "next_action": {"choice": "compare", "confidence": 0.84, "probabilities": {"compare": 0.84, "quote": 0.08, "human_followup": 0.05, "book_test_drive": 0.02, "finance_plan": 0.01, "block_outreach": 0.0}},
+        "high_value_lead": {"noul": 0.55}, "human_needed": {"noul": 0.26}, "do_not_contact": {"noul": 0.01}, "appointment_confirmed": {"noul": 0.01}
+      }
+    },
+    {
+      "id": "finance_price_objection",
+      "title": "金融/价格异议：要月供但未授权承诺",
+      "category": "金融/价格异议",
+      "message": "客户：如果首付低于 20%，36 期月供能不能控制在 4500 以内？你们先算清楚，别先替我安排销售电话。",
+      "facts": {"vehicle": "未明确", "competitors": [], "budget": "月供目标 4500（客户口述）", "trade_in": "未知", "finance": "首付低于 20%，36 期；审批未知", "visit_window": "未知", "appointment_confirmed": false, "do_not_contact": false},
+      "unknowns": ["车型与成交价", "金融审批", "利率与费用", "是否允许外呼"],
+      "gold": {"lead_stage": "evaluation", "high_value_lead": true, "risk_to_human": true, "wrong_progression": "不得承诺月供或自动外呼"},
+      "replay_answers": {
+        "intent": {"choice": "financing", "confidence": 0.90, "probabilities": {"financing": 0.90, "price_inquiry": 0.07, "purchase": 0.02, "comparison": 0.0, "test_drive": 0.0, "other": 0.01}},
+        "lead_stage": {"choice": "evaluation", "confidence": 0.80, "probabilities": {"evaluation": 0.80, "consideration": 0.15, "ready": 0.04, "awareness": 0.01}},
+        "objection": {"choice": "financing", "confidence": 0.88, "probabilities": {"financing": 0.88, "price": 0.10, "none": 0.02, "competition": 0.0, "product": 0.0}},
+        "next_action": {"choice": "finance_plan", "confidence": 0.76, "probabilities": {"finance_plan": 0.76, "quote": 0.12, "human_followup": 0.08, "compare": 0.02, "book_test_drive": 0.01, "block_outreach": 0.01}},
+        "high_value_lead": {"noul": 0.81}, "human_needed": {"noul": 0.85}, "do_not_contact": {"noul": 0.32}, "appointment_confirmed": {"noul": 0.01}
+      }
+    },
+    {
+      "id": "complaint",
+      "title": "投诉：先解决服务问题",
+      "category": "投诉",
+      "message": "客户：上次销售答应的资料一直没发，我已经等了三天。先把这件事解决，不要再给我推别的车型。",
+      "facts": {"vehicle": "未知", "competitors": [], "budget": "未知", "trade_in": "未知", "finance": "未知", "visit_window": "未知", "appointment_confirmed": false, "do_not_contact": false},
+      "unknowns": ["具体资料内容", "投诉处理结果", "是否愿意继续沟通"],
+      "gold": {"lead_stage": "consideration", "high_value_lead": false, "risk_to_human": true, "wrong_progression": "不得转成销售外呼或车型推荐"},
+      "replay_answers": {
+        "intent": {"choice": "other", "confidence": 0.84, "probabilities": {"other": 0.84, "purchase": 0.03, "price_inquiry": 0.03, "comparison": 0.02, "financing": 0.01, "test_drive": 0.07}},
+        "lead_stage": {"choice": "consideration", "confidence": 0.55, "probabilities": {"consideration": 0.55, "awareness": 0.20, "evaluation": 0.15, "ready": 0.10}},
+        "objection": {"choice": "none", "confidence": 0.62, "probabilities": {"none": 0.62, "product": 0.18, "price": 0.10, "competition": 0.05, "financing": 0.05}},
+        "next_action": {"choice": "human_followup", "confidence": 0.86, "probabilities": {"human_followup": 0.86, "quote": 0.05, "compare": 0.03, "finance_plan": 0.01, "book_test_drive": 0.01, "block_outreach": 0.04}},
+        "high_value_lead": {"noul": 0.41}, "human_needed": {"noul": 0.96}, "do_not_contact": {"noul": 0.66}, "appointment_confirmed": {"noul": 0.0}
+      }
+    },
+    {
+      "id": "ambiguous_irony",
+      "title": "模糊/反讽：临时输入必须重新判断",
+      "category": "模糊/反讽",
+      "message": "客户：你们要是还能把月供说清楚我就笑了，周六先看看再说，别当我已经订车。",
+      "facts": {"vehicle": "未明确", "competitors": [], "budget": "月供问题但金额未知", "trade_in": "未知", "finance": "需要澄清", "visit_window": "周六先看看；未确认", "appointment_confirmed": false, "do_not_contact": false},
+      "unknowns": ["客户真实预算", "是否认真表达购买意向", "是否愿意到店", "金融方案"],
+      "gold": {"lead_stage": "consideration", "high_value_lead": false, "risk_to_human": true, "wrong_progression": "不得把反讽写成预约或成交"},
+      "replay_answers": {
+        "intent": {"choice": "financing", "confidence": 0.46, "probabilities": {"financing": 0.46, "comparison": 0.20, "price_inquiry": 0.18, "other": 0.10, "purchase": 0.04, "test_drive": 0.02}},
+        "lead_stage": {"choice": "consideration", "confidence": 0.41, "probabilities": {"consideration": 0.41, "evaluation": 0.30, "awareness": 0.20, "ready": 0.09}},
+        "objection": {"choice": "financing", "confidence": 0.45, "probabilities": {"financing": 0.45, "price": 0.25, "none": 0.15, "competition": 0.10, "product": 0.05}},
+        "next_action": {"choice": "human_followup", "confidence": 0.38, "probabilities": {"human_followup": 0.38, "finance_plan": 0.22, "quote": 0.18, "book_test_drive": 0.12, "compare": 0.05, "block_outreach": 0.05}},
+        "high_value_lead": {"noul": 0.28}, "human_needed": {"noul": 0.86}, "do_not_contact": {"noul": 0.02}, "appointment_confirmed": {"noul": 0.04}
+      }
+    },
+    {
+      "id": "cancel_no_contact",
+      "title": "反向挑战：取消并明确勿联系",
+      "category": "禁联",
+      "message": "客户：我已经买别家的了，请取消线索，之后不要再联系我，也不要安排电话。",
+      "facts": {"vehicle": "未知", "competitors": ["其他品牌"], "budget": "未知", "trade_in": "未知", "finance": "未知", "visit_window": "未知", "appointment_confirmed": false, "do_not_contact": true},
+      "unknowns": ["是否允许保留合规记录", "退订完成时间"],
+      "gold": {"lead_stage": "closed_lost", "high_value_lead": false, "risk_to_human": true, "wrong_progression": "必须阻止外呼"},
+      "replay_answers": {
+        "intent": {"choice": "other", "confidence": 0.91, "probabilities": {"other": 0.91, "purchase": 0.0, "price_inquiry": 0.01, "comparison": 0.02, "financing": 0.0, "test_drive": 0.06}},
+        "lead_stage": {"choice": "consideration", "confidence": 0.78, "probabilities": {"consideration": 0.78, "awareness": 0.08, "evaluation": 0.04, "ready": 0.0, "closed_lost": 0.10}},
+        "objection": {"choice": "none", "confidence": 0.88, "probabilities": {"none": 0.88, "price": 0.03, "competition": 0.06, "financing": 0.01, "product": 0.02}},
+        "next_action": {"choice": "block_outreach", "confidence": 0.98, "probabilities": {"block_outreach": 0.98, "human_followup": 0.01, "quote": 0.0, "compare": 0.0, "finance_plan": 0.0, "book_test_drive": 0.01}},
+        "high_value_lead": {"noul": 0.01}, "human_needed": {"noul": 0.97}, "do_not_contact": {"noul": 0.99}, "appointment_confirmed": {"noul": 0.0}
+      }
+    }
+  ]
+}

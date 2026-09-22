@@ -1,0 +1,136 @@
+{
+  "mode": "replay",
+  "claim_boundary": "模拟销售场景；无真实预约系统；CRM 写入是测试状态",
+  "cases_total": 7,
+  "case_results": [
+    {
+      "id": "high_intent_i3",
+      "category": "高意向",
+      "selected_stage": "ready",
+      "expected_stage": "ready",
+      "high_value_probability": 0.93,
+      "action": "await_customer_confirmation",
+      "action_band": "human",
+      "human_needed": true,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "ordinary_inquiry",
+      "category": "普通咨询",
+      "selected_stage": "awareness",
+      "expected_stage": "awareness",
+      "high_value_probability": 0.28,
+      "action": "quote",
+      "action_band": "confirm",
+      "human_needed": false,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "competitor_comparison",
+      "category": "竞品",
+      "selected_stage": "consideration",
+      "expected_stage": "consideration",
+      "high_value_probability": 0.55,
+      "action": "compare",
+      "action_band": "auto",
+      "human_needed": false,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "finance_price_objection",
+      "category": "金融/价格异议",
+      "selected_stage": "evaluation",
+      "expected_stage": "evaluation",
+      "high_value_probability": 0.81,
+      "action": "human_review",
+      "action_band": "human",
+      "human_needed": true,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "complaint",
+      "category": "投诉",
+      "selected_stage": "consideration",
+      "expected_stage": "consideration",
+      "high_value_probability": 0.41,
+      "action": "human_review",
+      "action_band": "human",
+      "human_needed": true,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "ambiguous_irony",
+      "category": "模糊/反讽",
+      "selected_stage": "consideration",
+      "expected_stage": "consideration",
+      "high_value_probability": 0.28,
+      "action": "human_review",
+      "action_band": "human",
+      "human_needed": true,
+      "wrong_progression_blocked": true
+    },
+    {
+      "id": "cancel_no_contact",
+      "category": "禁联",
+      "selected_stage": "consideration",
+      "expected_stage": "closed_lost",
+      "high_value_probability": 0.01,
+      "action": "block_outreach",
+      "action_band": "block",
+      "human_needed": true,
+      "wrong_progression_blocked": true
+    }
+  ],
+  "metrics": {
+    "stage_accuracy_on_scored_cases": 1.0,
+    "high_value_recall": 1.0,
+    "risk_to_human_recall": 0.7142857142857143,
+    "wrong_progression_count": 0,
+    "replay_latency_ms": 0,
+    "replay_token_cost": 0,
+    "threshold_note": "演示门槛是起始策略，不是生产校准标准。"
+  },
+  "positive_flow": {
+    "initial_action": "await_customer_confirmation",
+    "initial_crm_appointment": null,
+    "approval_status": "written",
+    "readback_appointment": {
+      "type": "试驾",
+      "window": "周六下午",
+      "status": "confirmed_by_human_in_test_crm",
+      "real_booking_system": false
+    },
+    "second_same_approval": "duplicate"
+  },
+  "reverse_challenges": {
+    "cancel_no_contact": {
+      "action": "block_outreach",
+      "approval_result": "blocked",
+      "crm_mutated": false
+    },
+    "temporary_unknown_input": {
+      "round_id": "unknown-1",
+      "input_fingerprint": "09926c351ace",
+      "action": "human_review",
+      "action_band": "human"
+    },
+    "stale_result": {
+      "result": "stale_discarded",
+      "crm_mutated": false
+    },
+    "network_failure_visible": {
+      "status": "network_error",
+      "error_type": "ConnectionError",
+      "message": "Live 请求失败；未降级为 Replay，未修改 CRM。",
+      "no_mutation": true
+    }
+  },
+  "deterministic_checks": {
+    "idempotency": true,
+    "stale_discard": true,
+    "no_auto_appointment": true,
+    "no_contact_block": true,
+    "unknown_reclassification": true,
+    "failure_no_mutation": true
+  }
+}

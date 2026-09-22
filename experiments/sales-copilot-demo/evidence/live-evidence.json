@@ -1,0 +1,379 @@
+{
+  "mode": "live",
+  "claim_boundary": "模拟销售场景；真实 Jev 请求；人工确认后只写入测试 CRM；不代表真实预约成功",
+  "rounds": {
+    "positive": {
+      "status": "ok",
+      "decision": {
+        "mode": "live",
+        "case_id": "high_intent_i3",
+        "round_id": "live-positive-1",
+        "input_fingerprint": "e9ffd114f48d",
+        "model": "jev-1.13.0",
+        "request_id": "req_01a0c831d84171d4961582f3d242fb61",
+        "latency_ms": 1937.7,
+        "http_status": 200,
+        "answers": {
+          "intent": {
+            "type": "choice",
+            "choice": "purchase",
+            "confidence": 0.93,
+            "probabilities": {
+              "financing": 0.04,
+              "purchase": 0.95,
+              "comparison": 0.01,
+              "price_inquiry": 0.0,
+              "other": 0.0,
+              "test_drive": 0.0
+            }
+          },
+          "lead_stage": {
+            "type": "choice",
+            "choice": "ready",
+            "confidence": 0.69,
+            "probabilities": {
+              "ready": 0.77,
+              "awareness": 0.0,
+              "evaluation": 0.2,
+              "consideration": 0.03
+            }
+          },
+          "objection": {
+            "type": "choice",
+            "choice": "none",
+            "confidence": 0.18,
+            "probabilities": {
+              "financing": 0.2,
+              "price": 0.2,
+              "product": 0.0,
+              "none": 0.34,
+              "competition": 0.26
+            }
+          },
+          "next_action": {
+            "type": "choice",
+            "choice": "book_test_drive",
+            "confidence": 0.51,
+            "probabilities": {
+              "human_followup": 0.12,
+              "finance_plan": 0.25,
+              "book_test_drive": 0.59,
+              "compare": 0.0,
+              "block_outreach": 0.0,
+              "quote": 0.04
+            }
+          },
+          "high_value_lead": {
+            "type": "noul",
+            "noul": 0.85
+          },
+          "human_needed": {
+            "type": "noul",
+            "noul": 0.88
+          },
+          "do_not_contact": {
+            "type": "noul",
+            "noul": 0.01
+          },
+          "appointment_confirmed": {
+            "type": "noul",
+            "noul": 0.06
+          }
+        },
+        "usage": {
+          "input_tokens": 1174,
+          "output_tokens": 308
+        }
+      },
+      "proposal": {
+        "decision_id": "4f121f5b9f56",
+        "case_id": "high_intent_i3",
+        "round_id": "live-positive-1",
+        "input_fingerprint": "e9ffd114f48d",
+        "epoch": "epoch-0dd71a64",
+        "revision": 0,
+        "action": "await_customer_confirmation",
+        "action_band": "human",
+        "reason": "客户表达周六到店意向但未确认具体预约；不得把意向写成已预约。",
+        "choice_min_confidence": 0.18,
+        "human_needed": true,
+        "requires_human_approval": true,
+        "allowed_on_explicit_human_approval": true,
+        "appointment_confirmed_by_customer": false,
+        "crm_mutation": false,
+        "blocked_outreach": false,
+        "next_action": "book_test_drive"
+      }
+    },
+    "positive_human_approval": {
+      "status": "written",
+      "mutated": true,
+      "reason": "人工确认后写入测试 CRM",
+      "crm": {
+        "epoch": "epoch-0dd71a64",
+        "revision": 1,
+        "records": {
+          "lead-zhang": {
+            "id": "lead-zhang",
+            "name": "张先生",
+            "stage": "高意向",
+            "notes": [
+              "人工确认：客户明确同意周六下午到店；仅写入测试 CRM"
+            ],
+            "followups": [],
+            "do_not_contact": false,
+            "appointment": {
+              "type": "试驾",
+              "window": "周六下午",
+              "status": "confirmed_by_human_in_test_crm",
+              "real_booking_system": false
+            }
+          }
+        },
+        "audit": [
+          {
+            "event": "crm_write",
+            "idempotency_key": "live-positive-1-human-confirmation",
+            "revision": 1
+          }
+        ]
+      }
+    },
+    "cancel_no_contact": {
+      "status": "ok",
+      "decision": {
+        "mode": "live",
+        "case_id": "cancel_no_contact",
+        "round_id": "live-cancel-1",
+        "input_fingerprint": "d81db5dcd1ab",
+        "model": "jev-1.13.0",
+        "request_id": "req_01a0c831dba573a190b99fa25038e51d",
+        "latency_ms": 894.8,
+        "http_status": 200,
+        "answers": {
+          "intent": {
+            "type": "choice",
+            "choice": "other",
+            "confidence": 0.78,
+            "probabilities": {
+              "other": 0.8200000000000001,
+              "test_drive": 0.0,
+              "purchase": 0.18,
+              "price_inquiry": 0.0,
+              "financing": 0.0,
+              "comparison": 0.0
+            }
+          },
+          "lead_stage": {
+            "type": "choice",
+            "choice": "consideration",
+            "confidence": 0.28,
+            "probabilities": {
+              "consideration": 0.46,
+              "ready": 0.05,
+              "awareness": 0.37,
+              "evaluation": 0.12
+            }
+          },
+          "objection": {
+            "type": "choice",
+            "choice": "competition",
+            "confidence": 0.92,
+            "probabilities": {
+              "none": 0.07,
+              "competition": 0.93,
+              "price": 0.0,
+              "product": 0.0,
+              "financing": 0.0
+            }
+          },
+          "next_action": {
+            "type": "choice",
+            "choice": "block_outreach",
+            "confidence": 1.0,
+            "probabilities": {
+              "compare": 0.0,
+              "quote": 0.0,
+              "finance_plan": 0.0,
+              "book_test_drive": 0.0,
+              "human_followup": 0.0,
+              "block_outreach": 1.0
+            }
+          },
+          "high_value_lead": {
+            "type": "noul",
+            "noul": 0.03
+          },
+          "human_needed": {
+            "type": "noul",
+            "noul": 0.05
+          },
+          "do_not_contact": {
+            "type": "noul",
+            "noul": 0.98
+          },
+          "appointment_confirmed": {
+            "type": "noul",
+            "noul": 0.02
+          }
+        },
+        "usage": {
+          "input_tokens": 1042,
+          "output_tokens": 312
+        }
+      },
+      "proposal": {
+        "decision_id": "37d9f5b2036d",
+        "case_id": "cancel_no_contact",
+        "round_id": "live-cancel-1",
+        "input_fingerprint": "d81db5dcd1ab",
+        "epoch": "epoch-0dd71a64",
+        "revision": 1,
+        "action": "block_outreach",
+        "action_band": "block",
+        "reason": "客户明确取消并要求勿联系；策略层禁止外呼，模型概率不能越权解除。",
+        "choice_min_confidence": 0.28,
+        "human_needed": false,
+        "requires_human_approval": true,
+        "allowed_on_explicit_human_approval": false,
+        "appointment_confirmed_by_customer": false,
+        "crm_mutation": false,
+        "blocked_outreach": true,
+        "next_action": "block_outreach"
+      }
+    },
+    "temporary_unknown": {
+      "status": "ok",
+      "decision": {
+        "mode": "live",
+        "case_id": "temporary_unknown",
+        "round_id": "live-unknown-1",
+        "input_fingerprint": "74e25ed5a6da",
+        "model": "jev-1.13.0",
+        "request_id": "req_01a0c831df0b781db14ec84ae1c7098d",
+        "latency_ms": 824.9,
+        "http_status": 200,
+        "answers": {
+          "intent": {
+            "type": "choice",
+            "choice": "other",
+            "confidence": 0.62,
+            "probabilities": {
+              "price_inquiry": 0.06,
+              "financing": 0.02,
+              "comparison": 0.01,
+              "test_drive": 0.21,
+              "other": 0.68,
+              "purchase": 0.02
+            }
+          },
+          "lead_stage": {
+            "type": "choice",
+            "choice": "consideration",
+            "confidence": 0.41,
+            "probabilities": {
+              "ready": 0.0,
+              "awareness": 0.04,
+              "consideration": 0.56,
+              "evaluation": 0.4
+            }
+          },
+          "objection": {
+            "type": "choice",
+            "choice": "none",
+            "confidence": 0.37,
+            "probabilities": {
+              "financing": 0.04,
+              "product": 0.0,
+              "price": 0.46,
+              "competition": 0.0,
+              "none": 0.5
+            }
+          },
+          "next_action": {
+            "type": "choice",
+            "choice": "block_outreach",
+            "confidence": 0.76,
+            "probabilities": {
+              "quote": 0.01,
+              "finance_plan": 0.0,
+              "book_test_drive": 0.04,
+              "human_followup": 0.14,
+              "compare": 0.0,
+              "block_outreach": 0.8
+            }
+          },
+          "high_value_lead": {
+            "type": "noul",
+            "noul": 0.05
+          },
+          "human_needed": {
+            "type": "noul",
+            "noul": 0.31
+          },
+          "do_not_contact": {
+            "type": "noul",
+            "noul": 0.07
+          },
+          "appointment_confirmed": {
+            "type": "noul",
+            "noul": 0.03
+          }
+        },
+        "usage": {
+          "input_tokens": 940,
+          "output_tokens": 312
+        }
+      },
+      "proposal": {
+        "decision_id": "c246af8a141c",
+        "case_id": "temporary_unknown",
+        "round_id": "live-unknown-1",
+        "input_fingerprint": "74e25ed5a6da",
+        "epoch": "epoch-0dd71a64",
+        "revision": 1,
+        "action": "human_review",
+        "action_band": "human",
+        "reason": "置信度或业务风险达到人工复核条件。",
+        "choice_min_confidence": 0.37,
+        "human_needed": false,
+        "requires_human_approval": true,
+        "allowed_on_explicit_human_approval": true,
+        "appointment_confirmed_by_customer": false,
+        "crm_mutation": false,
+        "blocked_outreach": false,
+        "next_action": "block_outreach"
+      }
+    }
+  },
+  "crm_readback_after_positive": {
+    "epoch": "epoch-0dd71a64",
+    "revision": 1,
+    "records": {
+      "lead-zhang": {
+        "id": "lead-zhang",
+        "name": "张先生",
+        "stage": "高意向",
+        "notes": [
+          "人工确认：客户明确同意周六下午到店；仅写入测试 CRM"
+        ],
+        "followups": [],
+        "do_not_contact": false,
+        "appointment": {
+          "type": "试驾",
+          "window": "周六下午",
+          "status": "confirmed_by_human_in_test_crm",
+          "real_booking_system": false
+        }
+      }
+    },
+    "audit": [
+      {
+        "event": "crm_write",
+        "idempotency_key": "live-positive-1-human-confirmation",
+        "revision": 1
+      }
+    ]
+  },
+  "no_real_booking_system": true
+}
