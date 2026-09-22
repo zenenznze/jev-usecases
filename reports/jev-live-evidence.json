@@ -1,21 +1,38 @@
 {
-  "credential_source": "Windows User-level registry read at command start; injected only into the child process; value omitted",
+  "credential_source": "Fresh Windows User-level registry read for every Key-dependent subprocess; value omitted",
   "sdk_version": "0.7.1",
   "official_endpoint": "https://api.typesafe.ai/v1/systemone",
   "official_auth_format": "Authorization: Bearer <API_KEY>",
-  "smoke": {
-    "command": "PowerShell reads [Environment]::GetEnvironmentVariable('TYPESAFE_API_KEY','User'), sets only child $env:TYPESAFE_API_KEY, then POSTs the official endpoint",
+  "fresh_smoke": {
     "http_status": 200,
     "model": "jev-1.13.0",
-    "answers": {
-      "urgent": {
-        "type": "noul",
-        "noul": 0.97
-      }
+    "answer_keys": ["urgent"]
+  },
+  "offline": {
+    "pytest_not_live": {
+      "passed": 96,
+      "deselected": 38,
+      "exit_code": 0
     },
-    "usage": {
-      "input_tokens": 285,
-      "output_tokens": 20
+    "cli_list": {
+      "exit_code": 0,
+      "registered_use_cases": 37
+    }
+  },
+  "live_pytest": {
+    "command": "python -m pytest -m live -q --tb=line",
+    "passed": 35,
+    "failed": 3,
+    "deselected": 96,
+    "exit_code": 1,
+    "failures": {
+      "type": "MissingLLMKeyError",
+      "use_cases": [
+        "security_guarded_assistant",
+        "security_incident_copilot",
+        "security_tool_gate"
+      ],
+      "detail": "No ANTHROPIC_API_KEY, CLAUDE_API_KEY, or OPENAI_API_KEY was available; these are generative-model paths, not TypeSafe authentication failures."
     }
   },
   "customer_support": {
@@ -36,10 +53,7 @@
       "refund_requested": {"noul": 0.99},
       "policy_supports_refund": {"noul": 0.98}
     },
-    "usage": {
-      "input_tokens": 830,
-      "output_tokens": 196
-    }
+    "usage": {"input_tokens": 830, "output_tokens": 196}
   },
   "lead_generation": {
     "command": "jev-usecases run lead_generation --json-out",
@@ -50,45 +64,39 @@
     "actions": ["route:ae_hot"],
     "selected_answers": {
       "industry_fit": {"noul": 0.86},
-      "size_fit": {"noul": 0.77},
-      "buyer_relevance": {"noul": 0.65},
-      "pain_match": {"noul": 0.35},
-      "purchase_intent": {"score": 2.0, "confidence": 1.0},
-      "disqualified": {"noul": 0.07},
+      "size_fit": {"noul": 0.70},
+      "buyer_relevance": {"noul": 0.63},
+      "pain_match": {"noul": 0.34},
+      "purchase_intent": {"score": 2.0, "confidence": 0.99},
+      "disqualified": {"noul": 0.06},
       "priority": {"choice": "ae_hot", "confidence": 0.87}
     },
-    "usage": {
-      "input_tokens": 666,
-      "output_tokens": 154
-    }
+    "usage": {"input_tokens": 666, "output_tokens": 154}
   },
   "four_s_bmw_i3": {
     "request": "宝马 i3 询价；特斯拉 Model 3、奔驰 EQE 竞品比较；首付 20%；36 期；周六下午试驾；价格合适近期购买",
     "exit_code": 0,
     "model": "jev-1.13.0",
     "answers": {
-      "intent": {"choice": "purchase", "confidence": 0.92, "noul_or_score": null},
-      "lead_stage": {"choice": "ready", "confidence": 0.92},
-      "objection": {"choice": "price", "confidence": 0.36},
+      "intent": {"choice": "purchase", "confidence": 0.92},
+      "lead_stage": {"choice": "ready", "confidence": 0.90},
+      "objection": {"choice": "price", "confidence": 0.43},
       "next_action": {"choice": "book_test_drive", "confidence": 0.68},
       "high_value_lead": {"noul": 0.93},
-      "human_needed": {"noul": 0.92}
+      "human_needed": {"noul": 0.91}
     },
     "gate": {
       "thresholds": {
         "auto_confidence": 0.72,
         "human_confidence": 0.45,
-        "noul_yes": 0.7
+        "noul_yes": 0.70
       },
-      "minimum_choice_confidence": 0.36,
+      "minimum_choice_confidence": 0.43,
       "high_value_lead": true,
       "human_needed": true,
       "resulting_action_band": "human",
       "reason": "objection confidence is below human threshold and human_needed is above noul_yes"
     },
-    "usage": {
-      "input_tokens": 905,
-      "output_tokens": 260
-    }
+    "usage": {"input_tokens": 905, "output_tokens": 260}
   }
 }
