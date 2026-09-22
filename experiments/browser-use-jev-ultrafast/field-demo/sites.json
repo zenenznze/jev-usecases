@@ -1,0 +1,30 @@
+{
+  "feishu": {
+    "label": "飞书基线",
+    "url": "https://www.feishu.cn/",
+    "ready_priority": 1,
+    "preflight": ["用户已登录飞书", "首页可达", "无验证码/二次验证", "允许人工读取当前可见内容"],
+    "notes": "优先录制；只做导航、可见读取和发送前候选回复，不发送。"
+  },
+  "douyin": {
+    "label": "网页版抖音",
+    "url": "https://www.douyin.com/",
+    "ready_priority": 2,
+    "preflight": ["用户已登录网页版抖音", "搜索/私信页面可达", "接受页面风控或登录提示后人工接管"],
+    "notes": "记录 DOM、虚拟列表、登录态和风控变化；不发布、不批量抓取、不自动发送。"
+  },
+  "xiaohongshu": {
+    "label": "网页版小红书",
+    "url": "https://www.xiaohongshu.com/",
+    "ready_priority": 3,
+    "preflight": ["用户已登录网页版小红书", "搜索/消息页面可达", "接受页面风控或登录提示后人工接管"],
+    "notes": "记录 DOM、虚拟列表、登录态和风控变化；只读取当前可见且有权访问的信息。"
+  },
+  "xianyu": {
+    "label": "网页版闲鱼",
+    "url": "https://www.goofish.com/",
+    "ready_priority": 4,
+    "preflight": ["用户已登录网页版闲鱼", "搜索/消息页面可达", "接受页面风控或登录提示后人工接管"],
+    "notes": "记录商品/消息页面变化；不交易、不发布、不自动发送。"
+  }
+}

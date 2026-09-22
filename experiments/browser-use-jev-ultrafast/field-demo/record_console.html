@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Field Recording Console</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #17202a; background: #f4f6f8; }
+    body { max-width: 980px; margin: 0 auto; padding: 24px; }
+    header, section { background: #fff; border: 1px solid #dce3e9; border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+    header { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+    h1, h2, p { margin-top: 0; } p, li { line-height: 1.55; }
+    .live { background: #b42318; color: #fff; padding: 5px 10px; border-radius: 999px; font-weight: 700; }
+    .replay { background: #175cd3; color: #fff; padding: 5px 10px; border-radius: 999px; font-weight: 700; }
+    button, a, select, textarea { font: inherit; border: 1px solid #b9c5d0; border-radius: 6px; padding: 9px 12px; }
+    button, a { cursor: pointer; background: #175cd3; color: #fff; text-decoration: none; display: inline-block; }
+    button.secondary, a.secondary { background: #fff; color: #175cd3; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .card { border: 1px solid #e4e7ec; border-radius: 8px; padding: 14px; }
+    .muted { color: #667085; }
+    .danger { color: #b42318; }
+    .evidence { background: #101828; color: #d0d5dd; min-height: 110px; padding: 12px; white-space: pre-wrap; border-radius: 6px; }
+    textarea { width: 100%; min-height: 90px; box-sizing: border-box; }
+    label { display: block; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>Browser Field Recording Console</h1><p class="muted">仅作现场控制台；真实站点动作在 bsk Agent Window 中完成。</p></div>
+    <label>模式 <select id="mode-select"><option value="LIVE">LIVE</option><option value="REPLAY">REPLAY</option></select></label>
+    <span id="mode" class="live">LIVE</span>
+  </header>
+
+  <section>
+    <h2>录制前置</h2>
+    <ol>
+      <li>确认用户已登录目标站点；遇到登录、验证码或风控立即人工接管。</li>
+      <li>使用 <code>record_ready.py preflight --site feishu</code> 检查 bsk 连接。</li>
+      <li>使用 bsk trace 的 <code>--redact-values</code>；不得录制密码、验证码、Token 或 Cookie。</li>
+    </ol>
+    <button id="reset">失败重置 / 清空本地动作证据</button>
+    <button id="export" class="secondary">导出动作证据</button>
+  </section>
+
+  <section>
+    <h2>最快可录制入口：飞书基线</h2>
+    <p><a class="secondary" href="https://www.feishu.cn/" target="_blank" rel="noreferrer">打开飞书</a></p>
+    <div class="grid">
+      <article class="card"><h3>A 基础操作</h3><p>导航 → 搜索一个用户有权访问的文档/会话 → 筛选 → 打开详情 → 返回。全程不写入、不发布、不交易。</p><button data-log="basic_started">记录 A 开始</button></article>
+      <article class="card"><h3>B 可见数据读取</h3><p>只读取当前可见且有权访问的标题、时间、来源、状态；在本地记录结构化字段与来源页面，不批量抓取。</p><button data-log="data_read_started">记录 B 开始</button></article>
+      <article class="card"><h3>C 实时回复</h3><p>读最新真实消息 → Jev 判断意图/风险/下一动作 → 生成候选回复或模板 → 填入输入框；发送按钮保持人工确认锁定。</p><textarea id="candidate" placeholder="候选回复仅在发送前暂存，不会发送"></textarea><button data-log="candidate_filled">记录候选已填</button><button disabled title="必须由用户明确确认后另开任务">发送（默认锁定）</button></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>其他站点入口（只做 preflight + 人工录制）</h2>
+    <div class="grid">
+      <article class="card"><h3>网页版抖音</h3><a class="secondary" href="https://www.douyin.com/" target="_blank" rel="noreferrer">打开</a><p class="muted">登录态、虚拟列表、风控提示优先观察。</p></article>
+      <article class="card"><h3>网页版小红书</h3><a class="secondary" href="https://www.xiaohongshu.com/" target="_blank" rel="noreferrer">打开</a><p class="muted">登录态、搜索结果 DOM、消息入口优先观察。</p></article>
+      <article class="card"><h3>网页版闲鱼</h3><a class="secondary" href="https://www.goofish.com/" target="_blank" rel="noreferrer">打开</a><p class="muted">商品详情、消息入口和交易风险只观察不操作。</p></article>
+    </div>
+  </section>
+
+  <section><h2>动作证据（不保存正文/凭据）</h2><pre id="evidence" class="evidence"></pre></section>
+  <script>
+    const key = "field-recording-actions-v1";
+    const read = () => JSON.parse(localStorage.getItem(key) || "[]");
+    const write = (items) => { localStorage.setItem(key, JSON.stringify(items)); render(); };
+    const mode = () => document.getElementById("mode-select").value;
+    const log = (action) => write([...read(), { time: new Date().toISOString(), mode: mode(), action }]);
+    const render = () => {
+      const badge = document.getElementById("mode"); badge.textContent = mode(); badge.className = mode() === "LIVE" ? "live" : "replay";
+      document.getElementById("evidence").textContent = JSON.stringify(read(), null, 2);
+    };
+    document.getElementById("mode-select").onchange = render;
+    document.querySelectorAll("[data-log]").forEach((button) => button.onclick = () => log(button.dataset.log));
+    document.getElementById("reset").onclick = () => write([{ time: new Date().toISOString(), mode: mode(), action: "reset" }]);
+    document.getElementById("export").onclick = () => {
+      const blob = new Blob([JSON.stringify(read(), null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob); const link = document.createElement("a");
+      link.href = url; link.download = "field-actions-redacted.json"; link.click(); URL.revokeObjectURL(url);
+    };
+    render();
+  </script>
+</body>
+</html>
