@@ -8,12 +8,14 @@
 cd C:/Users/joe/projects/jev-use
 python experiments/browser-use-jev-ultrafast/field-demo/record_ready.py preflight --site feishu
 bsk browsers
-python experiments/browser-use-jev-ultrafast/field-demo/record_ready.py start --site feishu --script basic --mode live --browser <browser-id>
+python experiments/browser-use-jev-ultrafast/field-demo/start_recording.py --script basic --mode live --browser <browser-id> --run
 ```
 
-执行输出的 `bsk record start ... --redact-values` 命令后，用户在 Agent Window 中完成 A 剧本。真实网页操作和连续录制由用户掌握；trace bundle 是最终权威证据。
+这条命令会直接启动 `bsk record start ... --redact-values`；用户在 Agent Window 中照 `record_scripts/01_feishu_basic.md` 完成 A 剧本。真实网页操作和连续录制由用户掌握；trace bundle 是最终权威证据。
 
 - 录制卡：`RECORDING_CARD.md`
+- 可直接照录的脚本：`record_scripts/01_feishu_basic.md`、`02_feishu_visible_data.md`、`03_feishu_reply_before_send.md`
+- 真正启动 bsk 录制：`start_recording.py --script <basic|data|reply> --browser <id> --run`
 - 分镜：`STORYBOARD.md`
 - 站点入口和前置：`sites.json`
 - Live/Replay 控制台：`record_console.html`

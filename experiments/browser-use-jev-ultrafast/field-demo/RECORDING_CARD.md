@@ -24,10 +24,11 @@ bsk browsers
 
 ```bash
 cd C:/Users/joe/projects/jev-use
-python experiments/browser-use-jev-ultrafast/field-demo/record_ready.py start --site feishu --script basic --mode live --browser <browser-id>
+python experiments/browser-use-jev-ultrafast/field-demo/start_recording.py \
+  --script basic --mode live --browser <browser-id> --run
 ```
 
-复制它输出的 `bsk record start ... --redact-values` 命令执行。录制面板出现后点击开始，结束时点击 Finish。trace bundle 是权威原始步骤证据。
+这条命令会直接启动 `bsk record start ... --redact-values`。录制面板出现后点击开始，照 `record_scripts/01_feishu_basic.md` 执行，结束时点击 Finish。trace bundle 是权威原始步骤证据。
 
 控制台可选入口：
 
@@ -37,7 +38,13 @@ experiments/browser-use-jev-ultrafast/field-demo/record_console.html
 
 控制台只记录动作名、时间和 LIVE 标识，不保存消息正文；“发送”按钮永远锁定。
 
-## 三个最短剧本
+## 三个可直接照录的脚本
+
+- A：`record_scripts/01_feishu_basic.md`
+- B：`record_scripts/02_feishu_visible_data.md`
+- C：`record_scripts/03_feishu_reply_before_send.md`
+
+每个脚本都可以把上面的 `--script basic` 替换成 `data` 或 `reply`。
 
 ### A：基础操作（首条建议录制）
 
