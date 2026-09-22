@@ -1,0 +1,4 @@
+configured: 官方 TypeSafe Skill 已安装、读取，并接入项目发现链接。
+configured: Python 已安装 `typesafe-sdk>=0.7.1`，仅从系统环境读取 `TYPESAFE_API_KEY`。
+configured: `.gitignore`/`.env.example` 已完成，提交 `be002b5`；未测试、未调用 API，推送因无关提交 `f2133fd` 暂阻。
+Remaining step: 未执行唯一命令：`$key = "YOUR_TYPESAFE_API_KEY"; [Environment]::SetEnvironmentVariable("TYPESAFE_API_KEY", $key, "User"); $env:TYPESAFE_API_KEY = $key`
