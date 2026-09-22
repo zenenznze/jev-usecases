@@ -33,6 +33,10 @@
   - 调用隔离 checkout 中真实的 `Agent`、`Browser`、DOM snapshot、freshness guard 和 Browser Harness Chrome；
   - 默认使用明确标注的离线确定性 stub，不调用模型 API；
   - `--live` 模式只使用真实 Jev/文本模型，凭据缺失时直接阻塞，不降级。
+- `experiments/browser-use-jev-ultrafast/run_jev_only_probe.py`
+  - 只依赖 `TYPESAFE_API_KEY` 的真实 Jev 子测试；
+  - 预填搜索字段作为 fixture 前置条件，然后要求真实 Jev 决定搜索、打开客户、选择高意向和保存；
+  - 在任何后续 `TYPE_TEXT` 备注动作前停止，不替代文本模型。
 
 离线命令：
 
@@ -68,14 +72,30 @@ uv run --project .tmp/jev-ultrafast python experiments/browser-use-jev-ultrafast
 
 - `TYPESAFE_API_KEY=present`
 - `TEXT_MODEL_API_KEY=missing`
+- `OPENROUTER_API_KEY=missing`
+- `DEEPSEEK_API_KEY=missing`
+- `OPENAI_API_KEY=missing`
+- `ANTHROPIC_API_KEY=missing`
+- `GEMINI_API_KEY=missing`
+- `GLM_API_KEY=missing`
 
-已通过 `ProcessStartInfo` 仅为 `uv` 子进程注入 User-level 的 `TYPESAFE_API_KEY`，未打印值、未写入项目文件，也未修改当前 Agent 进程环境。执行 `--live` 的真实结果为退出码 1：
+上游项目的官方映射名就是 `TEXT_MODEL_API_KEY`：`.env.example` 直接声明它，`model.py::field_text()` 只读取 `os.environ.get("TEXT_MODEL_API_KEY")`；项目没有读取或自动映射 `OPENROUTER_API_KEY`、`DEEPSEEK_API_KEY` 等 provider 变量的代码。当前 User-level 也没有可映射的 provider secret，因此不能安全地免新增 secret。
+
+已通过 `ProcessStartInfo` 仅为 `uv` 子进程注入 User-level 的 `TYPESAFE_API_KEY`，未打印值、未写入项目文件，也未修改当前 Agent 进程环境。执行完整 `--live` CRM 的真实结果为退出码 1：
 
 ```text
 RuntimeError: Live CRM mode is blocked; missing environment entries: TEXT_MODEL_API_KEY
 ```
 
 该剩余阻塞是官方必需条件，不是可用 stub 替代的可选项：上游 README 的 Try it 示例要求同时配置两个变量；上游 `jev_ultrafast/model.py::field_text()` 在缺少 `TEXT_MODEL_API_KEY` 时直接抛出 `TYPE_TEXT needs TEXT_MODEL_API_KEY`，并且不会输入猜测文本。
+
+随后运行只依赖 TypeSafe 的 `run_jev_only_probe.py`，成功完成了 Browser Harness 启动、CRM fixture 加载和 fixture 搜索值预填；第一笔真实 Jev 请求到达 `https://api.typesafe.ai/v1/systemone`，但返回 HTTP 401：
+
+```text
+RuntimeError: Model provider returned HTTP 401; no action executed.
+```
+
+这证明 User-level 值已传入子进程，但当前 TypeSafe key 被服务拒绝；没有执行任何模型决定或浏览器 CRM mutation，未伪造阶段更新。
 
 ## 阻塞与下一条命令
 
