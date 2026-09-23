@@ -13,6 +13,16 @@
 - API Key 只从运行时环境注入，不写入仓库、日志或录制证据。
 - 三个项目已经进入初步录制阶段，本阶段不再扩展功能。
 
+## 仓库保全状态
+
+主仓库原始上游 `kenhuangus/jev-usecases` 对当前可用账号均为只读，不能直接推送。为确保阶段成果不只保留在本机，完整 `main` 已推送到可写 fork：
+
+- `https://github.com/zenenznze/jev-usecases`
+- 阶段交接提交：`22eed3b Document initial recording stage handoff`
+- 该 fork 的 `main` 包含项目一、项目二、相关 Jev 验证证据和本交接文档。
+
+若后续需要回馈原上游，应从 fork 发起 PR；不得强推或覆盖原上游。
+
 ## 项目一：4S 销售工作台
 
 位置：`experiments/sales-copilot-demo/`
