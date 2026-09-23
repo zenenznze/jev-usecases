@@ -1,0 +1,24 @@
+{
+  "should_trigger": [
+    "我们已经有一个 Demo 的代码，把它增加成 FDE 案例卡片并上传到公网。",
+    "给 Buildsome 的 FDE 案例页新增一张卡片，链接到现成的演示页面。",
+    "把这个静态 Demo 放到官网，先预览，通过后再发布。",
+    "Add this existing demo to the Buildsome FDE gallery and publish it.",
+    "Publish an existing sales demo at /fde-demo and verify the public URL."
+  ],
+  "should_not_trigger": [
+    "帮我从零设计一个销售副驾驶 Demo。",
+    "已有 Demo，但我只想改它的前端设计，不需要接入官网。",
+    "把现有 Demo 部署到另一个完全不同的网站。",
+    "给任意 Astro 项目修一下构建错误。",
+    "修改服务器上的 Caddy 全局配置。",
+    "安装一个 Agent Skill 到全局目录。",
+    "把当前仓库的普通代码修改提交并推送。",
+    "分析 FDE 是什么意思，不修改任何文件。"
+  ],
+  "near_neighbor": [
+    "Buildsome FDE 页面能不能先放一张占位卡片，Demo 稍后再补？",
+    "现有 Demo 只接入 FDE 页面做预览，暂时不要发布。",
+    "检查 Buildsome 公网上的 Demo 是否正常，不新增卡片。"
+  ]
+}
