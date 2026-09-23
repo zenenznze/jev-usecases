@@ -1,0 +1,69 @@
+远航汽车 · 4S 销售副驾驶录制卡
+====================================
+
+用途
+----
+模拟销售场景 + 真实 Jev 调用 + 测试 CRM 执行。
+没有真实预约系统，不声称预约成功。
+
+一条启动命令（Windows PowerShell）
+----------------------------------
+在仓库根目录执行：
+
+$key=[Environment]::GetEnvironmentVariable('TYPESAFE_API_KEY','User'); if ([string]::IsNullOrWhiteSpace($key)){throw 'TYPESAFE_API_KEY missing'}; $env:TYPESAFE_API_KEY=$key; .venv\Scripts\python.exe experiments\sales-copilot-demo\server.py --port 8787 --mode live
+
+然后打开：
+http://127.0.0.1:8787/
+
+Key 只注入当前子进程，不显示、不写入文件。
+
+录制顺序
+--------
+1. 页面顶部确认显示：LIVE · 真实 Jev。
+2. 点击“一键重置”。
+3. 选择案例：
+   高意向：i3 / 预算 / 置换 / 月供 / 周六到店但未确认
+4. 点击“重新判断本轮”。
+5. 观察并录制：
+   - 客户事实
+   - 模型推断
+   - 未知信息
+   - 模型版本
+   - 请求 ID
+   - 延迟
+   - 输入指纹
+6. 观察策略卡：客户表达周六到店意向但没有明确确认；系统不得把意向写成已预约。
+7. 点击：
+   “人工确认客户已明确同意到店 → 写入测试 CRM”
+8. 观察“CRM 独立读回”：阶段变为高意向，出现人工确认测试记录。
+9. 明确说明：这里是测试 CRM，不是真实预约。
+10. 点击“一键重置”，选择：取消并明确勿联系。
+11. 点击“重新判断本轮”，观察 action=block_outreach，不能继续外呼或推进。
+12. 再次重置，选择：模糊/反讽。
+13. 点击“重新判断本轮”，观察系统重新判断并进入人工复核，不沿用上一轮结果。
+
+失败时如何重试
+--------------
+点击“一键重置”，重新从第 2 步开始。
+Live 网络失败会显示错误，不会自动降级为 Replay，也不会修改 CRM。
+
+Replay 预演入口（不消耗真实 API）
+----------------------------------
+在仓库根目录执行：
+
+.venv\Scripts\python.exe experiments\sales-copilot-demo\server.py --port 8787
+
+页面顶部会显示 REPLAY · 可重复。
+
+边界声明
+--------
+- 这是模拟销售场景。
+- Live 模式才会请求真实 Jev。
+- CRM 写入是测试状态。
+- 没有真实预约系统，不声称预约成功。
+- 演示阈值是起始策略，不是已验证的生产标准。
+
+证据文件
+--------
+experiments\sales-copilot-demo\evidence\live-evidence.json
+experiments\sales-copilot-demo\evidence\replay-evidence.json
